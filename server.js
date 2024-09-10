@@ -2,6 +2,8 @@ import bodyParser from "body-parser";
 import express from "express";
 const app = express();
 
+var users = [];
+
 // port
 const PORT = 3000;
 
@@ -13,23 +15,37 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+// set view engine
+app.set("view engine", "ejs");
+
 // Routes
 app.route("/").get((req, res) => {
-  res.sendFile(process.cwd() + "/pages/index.html");
+  // res.sendFile(process.cwd() + "/pages/index.html");
+  res.render("index", {
+    title: "Node Project : HomePage",
+    heading: "Our Node Project",
+    users: users,
+  });
 });
 
 app.route("/about").get((req, res) => {
-  res.sendFile(process.cwd() + "/pages/about.html");
+  // res.sendFile(process.cwd() + "/pages/about.html");
+  res.render("about");
 });
 
 app
   .route("/contact")
   .get((req, res) => {
-    res.sendFile(process.cwd() + "/pages/contact.html");
+    // res.sendFile(process.cwd() + "/pages/contact.html");
+    res.render("contact", {
+      title: "Node Project : Contact Us",
+    });
   })
   .post((req, res) => {
-    console.log(req.body);
-    res.send("Submitted");
+    users.push(req.body);
+    console.log(users);
+
+    res.redirect("/");
   });
 
 // route : "/compose"
